@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Bloomly | Arquitectura Microclimática</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bloomly: {
+                            50: '#fff5f7',   /* Soft rose off-white */
+                            100: '#ffe4e9',
+                            200: '#fbc8d2',
+                            300: '#f39aaa',
+                            400: '#e8798f',  /* Soft pink */
+                            500: '#d95772',
+                            600: '#b83f5a',
+                            700: '#923247',  /* Tech dark pink */
+                            800: '#762a3b',
+                            900: '#5b202e',
+                            tech: '#1f171a', /* Very dark for tech sections */
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        tech: ['Space Grotesk', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        /* Tech grid background pattern */
+        .bg-grid-pattern {
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-bloomly-50 text-gray-800 font-sans antialiased selection:bg-bloomly-400 selection:text-white">
+
+    <header class="fixed w-full z-50 bg-bloomly-50/90 backdrop-blur-md border-b border-gray-200 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="w-10 h-10 bg-bloomly-700 text-white rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-leaf"></i>
+                    </div>
+                    <span class="font-tech font-bold text-xl text-bloomly-900 tracking-tight">Proyecto Bloomly</span>
+                </div>
+
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#proyecto" class="text-sm font-medium text-gray-600 hover:text-bloomly-600 transition-colors">El Proyecto</a>
+                    <a href="#tecnologia" class="text-sm font-medium text-gray-600 hover:text-bloomly-600 transition-colors">Arquitectura & Tech</a>
+                    <a href="#galeria" class="text-sm font-medium text-gray-600 hover:text-bloomly-600 transition-colors">Galería</a>
+                </nav>
+
+                <!-- CTA -->
+                <div class="hidden md:flex items-center">
+                    <a href="#tecnologia" class="bg-bloomly-900 hover:bg-bloomly-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center gap-2">
+                        <i class="fa-solid fa-microchip"></i> Ver Hardware
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <button id="mobile-menu-btn" class="md:hidden text-gray-600 p-2">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 shadow-lg">
+            <div class="px-4 pt-2 pb-6 space-y-1 text-center">
+                <a href="#proyecto" class="block px-3 py-4 text-base font-medium text-gray-700 hover:text-bloomly-600 border-b border-gray-50">El Proyecto</a>
+                <a href="#tecnologia" class="block px-3 py-4 text-base font-medium text-gray-700 hover:text-bloomly-600 border-b border-gray-50">Tecnología</a>
+                <a href="#galeria" class="block px-3 py-4 text-base font-medium text-gray-700 hover:text-bloomly-600">Galería</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="relative min-h-[90vh] flex items-center pt-20 overflow-hidden">
+            <div class="absolute inset-0 z-0 flex md:flex-row flex-col">
+                <!-- Soft earthy background on left -->
+                <div class="w-full md:w-1/2 h-full bg-bloomly-50"></div>
+                <!-- Tech image background on right -->
+                <div class="w-full md:w-1/2 h-full relative">
+                    <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Hardware y laboratorio" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-bloomly-900/60 mix-blend-multiply"></div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-bloomly-50 via-bloomly-50/80 md:via-bloomly-50/50 to-transparent"></div>
+                </div>
+            </div>
+
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                <div class="max-w-2xl reveal">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-bloomly-100 text-bloomly-700 text-xs font-semibold uppercase tracking-wider mb-6 border border-bloomly-200">
+                        <span class="w-2 h-2 rounded-full bg-bloomly-500 animate-pulse"></span>
+                        Sistema en línea
+                    </div>
+                    <h1 class="text-5xl md:text-7xl font-tech font-bold text-gray-900 leading-[1.1] mb-6">
+                        Floricultura de Precisión <br>
+                        <span class="text-bloomly-600">impulsada por Datos.</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-600 mb-8 font-light leading-relaxed max-w-xl">
+                        Un ecosistema automatizado de hardware y software diseñado para el cultivo perfecto de especies exigentes como orquídeas y tulipanes forzados mediante control microclimático exacto.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#tecnologia" class="bg-bloomly-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-bloomly-700 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-bloomly-900/20">
+                            Explorar Arquitectura <i class="fa-solid fa-arrow-down"></i>
+                        </a>
+                        <a href="#proyecto" class="bg-white text-gray-700 border border-gray-200 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors flex items-center justify-center">
+                            Sobre el Proyecto
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="proyecto" class="py-24 bg-white relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    
+                    <div class="order-2 lg:order-1 relative reveal">
+                        <!-- Botanical Image -->
+                        <div class="rounded-2xl overflow-hidden shadow-2xl relative z-10 aspect-[4/5] md:aspect-square">
+                            <img src="https://images.unsplash.com/photo-1600331405389-7013ee8ca281?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cultivo de Orquídeas" class="w-full h-full object-cover">
+                        </div>
+                        <!-- Tech overlay decorative element -->
+                        <div class="absolute -top-6 -left-6 w-48 h-48 bg-bloomly-100 rounded-full mix-blend-multiply filter blur-2xl opacity-70"></div>
+                        <div class="absolute -bottom-6 -right-6 w-64 h-64 bg-bloomly-200 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
+                        
+                        <!-- Floating data card -->
+                        <div class="absolute bottom-8 -right-4 md:-right-8 bg-white/90 backdrop-blur shadow-xl rounded-xl p-4 border border-gray-100 z-20 reveal delay-200">
+                            <div class="flex items-center gap-3 mb-2">
+                                <i class="fa-solid fa-temperature-half text-bloomly-500"></i>
+                                <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Lectura Actual</span>
+                            </div>
+                            <div class="flex items-end gap-2">
+                                <span class="font-tech text-3xl font-bold text-gray-900">22.4°C</span>
+                                <span class="text-sm font-medium text-bloomly-500 mb-1">+0.1° var</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-1 lg:order-2 reveal delay-100">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="h-[1px] w-12 bg-bloomly-500"></div>
+                            <h2 class="text-sm font-bold text-bloomly-600 tracking-widest uppercase">El Desafío</h2>
+                        </div>
+                        <h3 class="text-3xl md:text-5xl font-tech font-bold text-gray-900 mb-6 leading-tight">
+                            Dominando el <br>Microclima Indoor.
+                        </h3>
+                        <div class="prose prose-lg text-gray-600">
+                            <p class="mb-4">
+                                Cultivar especies delicadas a nivel comercial o investigativo requiere más que un simple invernadero. Requiere <strong>aislamiento y precisión algorítmica</strong>.
+                            </p>
+                            <p class="mb-4">
+                                El Proyecto Bloomly nace con el objetivo de desacoplar el cultivo de las variables meteorológicas externas. Creamos un entorno cerrado donde la temperatura, la humedad relativa y la ventilación no son producto del azar, sino variables matemáticas controladas en tiempo real.
+                            </p>
+                            <p>
+                                Nos enfocamos en especies de alto valor que requieren estrés térmico controlado (como los <em>tulipanes forzados</em>) y estabilización paramétrica estricta (como las <em>orquídeas premium</em>).
+                            </p>
+                        </div>
+
+                        <div class="mt-8 grid grid-cols-2 gap-6 border-t border-gray-100 pt-8">
+                            <div>
+                                <h4 class="font-tech text-3xl font-bold text-bloomly-700 mb-1">99.8%</h4>
+                                <p class="text-sm text-gray-500 font-medium">Estabilidad Térmica</p>
+                            </div>
+                            <div>
+                                <h4 class="font-tech text-3xl font-bold text-bloomly-700 mb-1">24/7</h4>
+                                <p class="text-sm text-gray-500 font-medium">Monitoreo Continuo</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="tecnologia" class="py-24 bg-bloomly-tech relative text-white overflow-hidden">
+            <!-- Tech Grid Background -->
+            <div class="absolute inset-0 z-0 bg-grid-pattern opacity-20"></div>
+            
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-sm font-bold text-bloomly-400 tracking-widest uppercase mb-3">Hardware & Software</h2>
+                    <h3 class="text-3xl md:text-5xl font-tech font-bold mb-6">Arquitectura del Sistema</h3>
+                    <p class="text-gray-400 max-w-2xl mx-auto text-lg">Integración de electrónica de consumo, microcontroladores y procesamiento matemático para un control ambiental de grado industrial.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                    
+                    <!-- Card 1: Raspberry Pi -->
+                    <div class="glass-card rounded-2xl p-8 hover:bg-white/5 transition-colors duration-300 reveal">
+                        <div class="w-14 h-14 bg-bloomly-500/20 rounded-xl flex items-center justify-center mb-6 border border-bloomly-500/30">
+                            <i class="fa-solid fa-microchip text-3xl text-bloomly-400"></i>
+                        </div>
+                        <h4 class="text-xl font-tech font-bold mb-3">Telemetría Core</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                            El cerebro del sistema orquesta la lectura de arreglos de sensores, almacena series temporales en una base de datos local y ejecuta la lógica de control principal mediando mediante scripts.
+                        </p>
+                        <ul class="space-y-2 text-sm text-gray-300">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-bloomly-400 text-xs"></i> Cronjobs de muestreo (1Hz)</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-bloomly-400 text-xs"></i> Interfaz de control web local</li>
+                        </ul>
+                    </div>
+
+                    <!-- Card 2: LG Minisplit -->
+                    <div class="glass-card rounded-2xl p-8 hover:bg-white/5 transition-colors duration-300 reveal delay-100">
+                        <div class="w-14 h-14 bg-blue-500/20 rounded-xl flex items-center justify-center mb-6 border border-blue-500/30">
+                            <i class="fa-solid fa-wind text-3xl text-blue-400"></i>
+                        </div>
+                        <h4 class="text-xl font-tech font-bold mb-3">Integración micro Clima</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                            En lugar de usar actuadores genéricos, realizamos ingeniería inversa / integración API con unidades Mini-Split de LG. El sistema inyecta comandos para modular el compresor inverter y los ventiladores de manera inteligente.
+                        </p>
+                        <ul class="space-y-2 text-sm text-gray-300">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400 text-xs"></i> Control preciso de frigorías</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400 text-xs"></i> Prevención de picos de consumo</li>
+                        </ul>
+                    </div>
+
+                    <!-- Card 3: Misting -->
+                    <div class="glass-card rounded-2xl p-8 hover:bg-white/5 transition-colors duration-300 reveal delay-200">
+                        <div class="w-14 h-14 bg-cyan-500/20 rounded-xl flex items-center justify-center mb-6 border border-cyan-500/30">
+                            <i class="fa-solid fa-cloud-showers-water text-3xl text-cyan-400"></i>
+                        </div>
+                        <h4 class="text-xl font-tech font-bold mb-3">Riego y Nebulización</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                            Mantenemos un déficit de presión de vapor (VPD) óptimo mediante micro-aspersores y nebulizadores ultrasónicos accionados por relés de estado sólido. Aumenta la humedad relativa sin encharcar el sustrato.
+                        </p>
+                        <ul class="space-y-2 text-sm text-gray-300">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400 text-xs"></i> Gotas < 50 micras (Dry Fog)</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400 text-xs"></i> Ciclos cortos de modulación por ancho de pulso</li>
+                        </ul>
+                    </div>
+
+                    <!-- Card 4: Kalman Filters -->
+                    <div class="glass-card rounded-2xl p-8 hover:bg-white/5 transition-colors duration-300 reveal delay-300">
+                        <div class="w-14 h-14 bg-purple-500/20 rounded-xl flex items-center justify-center mb-6 border border-purple-500/30">
+                            <i class="fa-solid fa-wave-square text-3xl text-purple-400"></i>
+                        </div>
+                        <h4 class="text-xl font-tech font-bold mb-3">Filtros de Kalman</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                            Los sensores de bajo costo introducen ruido ("jitter"). Aplicamos Filtros de Kalman en el pipeline de datos para estimar el estado real del sistema, filtrando lecturas erróneas y prediciendo tendencias térmicas antes de que ocurran.
+                        </p>
+                        <ul class="space-y-2 text-sm text-gray-300">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-400 text-xs"></i> Suavizado algorítmico de señales</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-400 text-xs"></i> Prevención de oscilación de actuadores (PID tuning)</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="galeria" class="py-24 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-3xl md:text-5xl font-tech font-bold text-gray-900 mb-4">Visualizando Bloomly</h2>
+                    <p class="text-gray-500">Donde la ingeniería se encuentra con la naturaleza.</p>
+                </div>
+
+                <!-- CSS Grid Gallery -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 auto-rows-[250px]">
+                    <!-- Item 1: Hardware -->
+                    <div class="group relative rounded-xl overflow-hidden reveal bg-black">
+                        <img src="https://images.unsplash.com/photo-1555664424-778a1e5e1b48?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Placa de circuitos" class="w-full h-full object-cover opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-all duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                            <span class="text-white font-tech font-medium">Placa Controladora de Relés</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Item 2: Plant (Span 2 rows if possible in future, standard size for now) -->
+                    <div class="group relative rounded-xl overflow-hidden reveal delay-100 sm:col-span-2 md:col-span-1 md:row-span-2 bg-bloomly-800">
+                        <img src="https://images.unsplash.com/photo-1520764816912-32b005126131?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Tulipanes" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                            <span class="text-white font-tech font-medium">Tulipanes en fase de forzado</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 3: Server/Raspberry -->
+                    <div class="group relative rounded-xl overflow-hidden reveal delay-200 bg-black">
+                        <img src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Servidor / Microcontrolador" class="w-full h-full object-cover opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-all duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                            <span class="text-white font-tech font-medium">Servidor de Telemetría Node.js</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 4: Plant Orchid -->
+                    <div class="group relative rounded-xl overflow-hidden reveal bg-bloomly-900">
+                        <img src="https://images.unsplash.com/photo-1599839619722-39751411ea63?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Orquídea" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                            <span class="text-white font-tech font-medium">Phalaenopsis (Desarrollo Foliar)</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 5: Sensors / Dashboard -->
+                    <div class="group relative rounded-xl overflow-hidden reveal delay-100 sm:col-span-2 md:col-span-1 bg-black">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Dashboard de datos" class="w-full h-full object-cover opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-all duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                            <span class="text-white font-tech font-medium">Dashboard de Monitoreo (Grafana)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-white pt-16 pb-8 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+                <!-- Branding -->
+                <div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 bg-white/10 rounded flex items-center justify-center">
+                            <i class="fa-solid fa-leaf text-bloomly-400"></i>
+                        </div>
+                        <span class="font-tech font-bold text-xl tracking-tight">Proyecto Bloomly</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                        Desarrollo e investigación en agricultura de ambiente controlado. Integrando ingeniería de software, IoT y botánica.
+                    </p>
+                </div>
+                
+                <!-- Links -->
+                <div>
+                    <h4 class="font-tech font-bold text-lg mb-6">Documentación</h4>
+                    <ul class="space-y-3 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-bloomly-400 transition-colors flex items-center gap-2"><i class="fa-solid fa-code-branch w-4"></i> Repositorio GitHub</a></li>
+                        <li><a href="#" class="hover:text-bloomly-400 transition-colors flex items-center gap-2"><i class="fa-solid fa-book w-4"></i> API Reference</a></li>
+                        <li><a href="#" class="hover:text-bloomly-400 transition-colors flex items-center gap-2"><i class="fa-solid fa-diagram-project w-4"></i> Esquemas de Hardware</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h4 class="font-tech font-bold text-lg mb-6">Contacto</h4>
+                    <ul class="space-y-3 text-sm text-gray-400">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-envelope mt-1 text-bloomly-500"></i>
+                            <span>research@bloomly.tech<br>(Placeholder)</span>
+                        </li>
+                        <li class="flex items-start gap-3 mt-4">
+                            <i class="fa-solid fa-location-dot mt-1 text-bloomly-500"></i>
+                            <span>Laboratorio de Control Automático<br>Ciudad de México, México</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-500 font-tech">
+                <p>&copy; 2026 Proyecto Bloomly. Ingeniería Botánica Aplicada.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar blur and shadow on scroll
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add('shadow-sm', 'bg-white/95');
+                navbar.classList.remove('bg-bloomly-50/90');
+            } else {
+                navbar.classList.remove('shadow-sm', 'bg-white/95');
+                navbar.classList.add('bg-bloomly-50/90');
+            }
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            const icon = mobileMenuBtn.querySelector('i');
+            if (mobileMenu.classList.contains('hidden')) {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            } else {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            }
+        });
+
+        // Close mobile menu on link click
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                const icon = mobileMenuBtn.querySelector('i');
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            });
+        });
+
+        // Scroll Reveal Animations
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100; // threshold
+
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+
+        window.addEventListener("scroll", reveal);
+        // Trigger once on load
+        reveal();
+    </script>
+</body>
+</html>
